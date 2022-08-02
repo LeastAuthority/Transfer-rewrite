@@ -1,10 +1,12 @@
-import { Button, Group, Space, Stack, Title } from "@mantine/core";
+import { Button, Space, Stack, Text } from "@mantine/core";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, X } from "tabler-icons-react";
 import { useError } from "../../../hooks/useError";
+import { useCommonStyles } from "../../../hooks/useCommonStyles";
 import { useWormhole } from "../../../hooks/useWormhole";
 import { detectErrorType } from "../../../util/errors";
+import Content from "../../Content";
 import FileLabel from "../../FileLabel";
 
 type ContentProps = {
@@ -13,27 +15,32 @@ type ContentProps = {
 };
 
 export function ReceiveConsentScreenContent(props: ContentProps) {
+  const { classes } = useCommonStyles();
+
   return (
-    <>
-      <Title order={2}>Ready to download</Title>
+    <Content>
+      <Text className={classes.headerText}>Ready to download</Text>
       <Space h="md" />
       <Stack align="center">
         <FileLabel />
-        <Group>
-          <Button onClick={props.onAccept} color="blue">
-            <Download /> Download
-          </Button>
-          <Button
-            data-testid="send-page-cancel-button"
-            onClick={props.onCancel}
-            variant="light"
-            color="dark"
-          >
-            <X /> Cancel
-          </Button>
-        </Group>
+        <Button
+          leftIcon={<Download />}
+          onClick={props.onAccept}
+          className={classes.primary}
+        >
+          Download
+        </Button>
+        <Space h="xl" />
+        <Button
+          leftIcon={<X />}
+          data-testid="send-page-cancel-button"
+          onClick={props.onCancel}
+          className={classes.secondary}
+        >
+          Cancel
+        </Button>
       </Stack>
-    </>
+    </Content>
   );
 }
 

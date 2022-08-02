@@ -1,21 +1,24 @@
 import { Group, Paper, Skeleton, Text } from "@mantine/core";
 import React from "react";
 import { File } from "tabler-icons-react";
+import { useCommonStyles } from "../hooks/useCommonStyles";
 import { useWormhole } from "../hooks/useWormhole";
 import { sizeToClosestUnit } from "../util/sizeToClosestUnit";
 
 type ContentProps = { name: string; size: number };
 
 export function FileLabelContent(props: ContentProps) {
+  const { classes } = useCommonStyles();
+
   return (
-    <Paper shadow="sm" p="md" withBorder>
+    <Paper p="md" withBorder>
       {props.name && props.size ? (
         <Group align="center">
           <File />
-          <Text component="span" weight="bold" color="dimmed">
+          <Text component="span" weight={500} className={classes.grey}>
             {props.name}
           </Text>
-          <Text component="span" color="dimmed">
+          <Text component="span" weight={500} className={classes.grey}>
             {" "}
             ({sizeToClosestUnit(props.size)})
           </Text>

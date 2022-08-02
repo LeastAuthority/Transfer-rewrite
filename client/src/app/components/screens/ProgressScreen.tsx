@@ -1,8 +1,10 @@
-import { Button, Progress, Space, Stack, Text, Title } from "@mantine/core";
+import { Button, Progress, Space, Stack, Text } from "@mantine/core";
 import React from "react";
 import { X } from "tabler-icons-react";
+import { useCommonStyles } from "../../hooks/useCommonStyles";
 import { useWormhole } from "../../hooks/useWormhole";
 import { durationToClosestUnit } from "../../util/durationToClosestUnit";
+import Content from "../Content";
 import FileLabel from "../FileLabel";
 
 type ContentProps = {
@@ -15,30 +17,32 @@ type ContentProps = {
 };
 
 export function ProgressScreenContent(props: ContentProps) {
+  const { classes } = useCommonStyles();
+
   return (
-    <>
-      <Title order={1}>{props.title}</Title>
+    <Content>
+      <Text className={classes.headerText}>{props.title}</Text>
       <Space h="md" />
       <Stack align="center">
         <FileLabel />
         <Progress
           style={{ width: "100%" }}
-          size="xl"
+          size={32}
           value={(props.bytesSent / props.fileSize) * 100}
         />
-        <Text>
+        <Text className={classes.grey}>
           {props.eta > 1 ? durationToClosestUnit(props.eta) : props.waitText}
         </Text>
         <Button
+          leftIcon={<X />}
           data-testid="send-page-cancel-button"
           onClick={props.onCancel}
-          variant="light"
-          color="dark"
+          className={classes.secondary}
         >
-          <X /> Cancel
+          Cancel
         </Button>
       </Stack>
-    </>
+    </Content>
   );
 }
 

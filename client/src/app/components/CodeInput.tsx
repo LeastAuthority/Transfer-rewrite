@@ -3,6 +3,7 @@ import { Modifier } from "@popperjs/core";
 import React, { useState } from "react";
 import { usePopper } from "react-popper";
 import { useCodeInput } from "../hooks/useCodeInput";
+import { useCommonStyles } from "../hooks/useCommonStyles";
 import { applyCodeSuggestion } from "../util/applyCodeSuggestion";
 import { CODE_SEGMENT_DELIMITER } from "../util/constants";
 import { getCodeSuggestion } from "../util/getCodeSuggestion";
@@ -39,6 +40,7 @@ type ContentProps = {
 };
 
 export function CodeInputContent(props: ContentProps) {
+  const { classes } = useCommonStyles();
   const [referenceElement, setReferenceElement] =
     useState<HTMLElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLElement | null>(null);
@@ -77,9 +79,18 @@ export function CodeInputContent(props: ContentProps) {
 
   return (
     <div data-testid="code-input-container">
-      <Group align="stretch" ref={setReferenceElement} spacing="md">
+      <Group position="center" spacing="md">
         <TextInput
-          style={{ flex: 1 }}
+          ref={setReferenceElement}
+          style={{
+            flexGrow: 1,
+            maxWidth: 400,
+          }}
+          sx={(theme) => ({
+            input: {
+              textAlign: "center",
+            },
+          })}
           data-testid="code-input"
           type="text"
           value={props.code}
@@ -103,6 +114,7 @@ export function CodeInputContent(props: ContentProps) {
             }
           }}
           loading={props.submitting}
+          className={classes.primary}
         >
           Next
         </Button>
@@ -120,17 +132,28 @@ export function CodeInputContent(props: ContentProps) {
         {...attributes.popper}
       >
         <Space h="sm" />
-        <Paper shadow="md" p="xs" withBorder>
+        <Paper p="xs" withBorder>
           <Group spacing="md" position="center">
-            <Text inline>{props.codeSuggestion}</Text>
-            <Paper shadow="xs" p="xs" withBorder>
-              <Text>Press space to complete</Text>
+            <Text inline className={classes.darkGrey}>
+              {props.codeSuggestion}
+            </Text>
+            <Paper p="xs" withBorder>
+              <Text className={classes.darkGrey}>Press space to complete</Text>
             </Paper>
           </Group>
         </Paper>
       </div>
-      <Text data-testid="code-error-message" color="red">
-        {errorMessage}
+      <Text
+        data-testid="code-error-message"
+        sx={(theme) => ({
+          color: theme.other.colors["warning-red"],
+        })}
+        align="center"
+        size="sm"
+        weight={300}
+      >
+        <Space h="sm" />
+        {errorMessage || <>&#8203;</>}
       </Text>
     </div>
   );
@@ -141,7 +164,7 @@ type Props = {
   submitting?: boolean;
 };
 
-export function CodeInput(props: Props) {
+export default function CodeInput(props: Props) {
   const [focused, setFocused] = useState(false);
   const codeInput = useCodeInput();
   const codeSuggestion = getCodeSuggestion(codeInput?.value || "");
